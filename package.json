@@ -1,0 +1,24 @@
+{
+  "name": "player-pirate",
+  "private": true,
+  "version": "0.0.0",
+  "engines": {
+    "node": "v20.10.0"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.2.0"
+  },
+  "dependencies": {
+    "@ffmpeg/ffmpeg": "^0.12.10",
+    "@ffmpeg/util": "^0.12.1",
+    "axios": "^1.7.2",
+    "plyr": "^3.7.8",
+    "srt-webvtt": "^2.0.0"
+  }
+}
