@@ -15,8 +15,8 @@ const baseURL = '/ffmpeg'
 const maxAllowedSize = (1024*2) * 1024 * 1024;
 const RANDOM_LANGS = [
   "en", // English
-  "fr", // French
-  "es", // Spanish
+  "en", // French
+  "el", // Spanish
   "de", // German
   "zh", // Chinese
   "ja", // Japanese
@@ -33,7 +33,7 @@ const RANDOM_LANGS = [
   "cs", // Czech
   "fi", // Finnish
   "el", // Greek
-  "da"  // Danish
+  "da"  
 ]
 
 // globals
@@ -65,7 +65,7 @@ let source_config = {
 if(!localStorage.getItem('time')){
   localStorage.setItem('time',JSON.stringify({}))
 }
-
+const flog = document.getElementById('flog')
 const player = new Plyr('#player',{
   keyboard:{global:true},settings:["captions", "quality", "speed", "loop"] ,captions:{active:true,language:'auto',update:true},tooltips:{controls:true,seek:true},controls: [
     'play-large',
@@ -119,17 +119,28 @@ const load = async(files)=>{
   ]
   
 
+
+ 
+  player.source = source_config
+
+  loadExtras()
+  saveDuration()
+
+  flog.innerText = 'Checking ffmpeg compatablity.'
   // check ffmpeg processing
-  if (files.size < maxAllowedSize && SharedArrayBuffer){
+  if (files.size < maxAllowedSize && SharedArrayBuffer) {
+    flog.innerText="loading ffmpeg. It's 31mb bro"
     await ffmpeg.load({
       coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
       wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
-       workerURL: await toBlobURL(`${baseURL}/ffmpeg-core.worker.js`, 'text/javascript')
+      workerURL: await toBlobURL(`${baseURL}/ffmpeg-core.worker.js`, 'text/javascript')
     });
-  
+
     console.log('write')
+    flog.innerText='writing your file to wasm'
     await ffmpeg.writeFile(fname, await fetchFile(files));
     console.log('exec')
+    flog.innerText = 'trying to extract subs if available'
     // ffmpeg -i movie.mkv -vn -an -codec:s:0 srt movie.srt
     // await ffmpeg.exec(['-i', name,'-vn','-an','-codec:s:0','srt', 'subs.srt']);
     await ffmpeg.exec(['-i', fname, '-vn', '-an', '-c:s', 'copy', 'subs_%d.srt']);
@@ -138,29 +149,18 @@ const load = async(files)=>{
 
     let list = await ffmpeg.listDir('/')
     console.log(list)
-    let found = list.find((i)=>i.name=='subs_%d.srt')
-    if(found?.name) {
-      let data  =  await ffmpeg.readFile('subs_%d.srt') 
-      let  bob = new Blob([data], { type: 'text/plain' });
-      let subUrl = await toWebVTT(bob)
-      source_config.tracks = [
-        {
-          kind: 'captions',
-          label: 'English',
-          srclang: 'en',
-          src: subUrl,
-          default: true,
-        }
-      ]
+    let found = list.find((i) => i.name == 'subs_%d.srt')
+    if (found?.name) {
+      flog.innerText='subs available in few secs.'
+      let data = await ffmpeg.readFile('subs_%d.srt')
+      let bob = new Blob([data], { type: 'text/plain' });
+      addSub(bob)      
+    }else{
+      flog.innerText='subs not found in mkv file.'
     }
-  }else{
-    if(SharedArrayBuffer) document.getElementById('large-file').classList.remove('hide')
+  } else {
+    if (SharedArrayBuffer) document.getElementById('large-file').classList.remove('hide')
   }
- 
-  player.source = source_config
-
-  loadExtras()
-  saveDuration()
 }
   
 function saveDuration(){
@@ -175,7 +175,7 @@ function saveDuration(){
 
    setTimeout(()=>{
     player.currentTime = tempdur
-    player.pause()
+    // player.pause()
   },200)
 
   }
@@ -246,6 +246,7 @@ async function addSub(data){
   })
   console.log(data,subUrl)
   player.source = source_config
+  setTimeout(() => player.toggleCaptions(true),400)
   saveDuration()
 }
 

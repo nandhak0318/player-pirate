@@ -1,49 +1,86 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Player Pirate</title>
-  </head>
-  <body>
-    <div class="things">
+<head>
+  <meta charset="UTF-8" />
+  <!-- <link rel="icon" type="image/svg+xml" href="/vite.svg" /> -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Player Pirate</title>
+  <meta name="description"
+    content="Player Pirate is a versatile video player that supports MKV and other video files with subtitles. Features include subtitle delay adjustment, 2x playback, and resume functionality.">
+
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="Player Pirate - Advanced Video Player with Subtitle Support">
+  <meta property="og:description"
+    content="Player Pirate lets you play MKV and other video files with subtitles. Enjoy features like subtitle delay, 2x speed playback, and resume where you left off.">
+  <meta property="og:image" content="/images/player-pirate-thumbnail.png">
+  <meta property="og:url" content="https://www.playerpirate.com">
+  <meta property="og:type" content="website">
+
+  <!-- Twitter Card Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Player Pirate - Advanced Video Player with Subtitle Support">
+  <meta name="twitter:description"
+    content="Player Pirate supports MKV and other video files with subtitle options. Features include adjusting subtitle delay, 2x speed playback, and resuming from where you left off.">
+  <meta name="twitter:image" content="/images/player-pirate-thumbnail.png">
+  <meta name="twitter:site" content="@PlayerPirate">
+
+  <!-- Canonical Link -->
+  <link rel="canonical" href="https://www.playerpirate.com">
+
+  <!-- Additional Meta Tags -->
+  <meta name="robots" content="index, follow">
+  <meta name="keywords"
+    content="video player, MKV player, subtitle support, subtitle delay, 2x playback, resume video, local video player">
+  <meta name="author" content="Player Pirate Team">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div class="things">
     <form id="upload">
-      <p>Select Video to Play</p>
+      <p>Select Video to Play:</p>
       <input type="file" name="movie" id="movie">
     </form>
 
     <div class="subtitle">
-      <form >
-      <div class="top">
-        <p>Subtitles:</p>
-      </div>
-      <div class="bottom">
-        <input type="file" name="sub"  id="add-sub" hidden>
-        <label class="button-8" style="width: 70px;" for="add-sub">Add
-        </label>
-        <input class="short-input" placeholder="negative values to reduce subtitle speed" type="number" name="delay" id="delay">
-      <button class="button-8" id="add-dly">Adjust</button>
-      </div>
-    </form>
+      <form>
+        <div class="top">
+          <p>Subtitles:</p>
+        </div>
+        <div class="bottom">
+          <input type="file" name="sub" id="add-sub" hidden>
+          <label class="button-8" style="width: 70px;" for="add-sub">Add
+          </label>
+          <input class="short-input" placeholder="negative values to reduce subtitle speed" type="number" name="delay"
+            id="delay">
+          <button class="button-8" id="add-dly">Adjust</button>
+        </div>
+      </form>
+    </div>
+    <div class="volume-slider">
+      <p>Boost Audio:</p>
+      <p id="boost-sup" class="hide">Not supported by browser.</p>
+      <input id="slider" type="range" min="1" max="10" value="1" step="1" />
+    </div>
+    <div class="warnings">
+      <p>Infos:</p>
+      <p id="flog"></p>
+      <p class="hide" id="share">SharedArrayBuffer not available. subtitles cannot be extracted from such video files.
+      </p>
+      <p id="large-file" class="hide">Files larger than 3GB cannot be processed by ffmpeg, meaning subtitles cannot be
+        extracted from such video files.</p>
+    </div>
+
   </div>
-  <div class="volume-slider">
-    <p>Boost Audio</p>
-    <p id="boost-sup" class="hide">Not supported by browser.</p>
-    <input id="slider" type="range" min="1" max="10" value="1" step="1" />
-  </div>
-  <div class="warnings">
-    <p>warnings</p>
-    <p class="hide" id="share">SharedArrayBuffer not available. subtitles cannot be extracted from such video files. </p>
-      <p id="large-file" class="hide">Files larger than 3GB cannot be processed by ffmpeg, meaning subtitles cannot be extracted from such video files.</p>
-  </div>
-  
-</div>
-    <video id="player" playsinline controls controls ></video> 
-      <!-- Captions are optional -->
-      <!-- <track kind="captions" label="English captions" src="/path/to/captions.vtt" srclang="en" default /> -->
-    </video>
-    <script type="module" src="/main.js"></script>
-  </body>
+  <video id="player" playsinline controls controls></video>
+  <!-- Captions are optional -->
+  <!-- <track kind="captions" label="English captions" src="/path/to/captions.vtt" srclang="en" default /> -->
+  </video>
+  <script type="module" src="/main.js"></script>
+</body>
+
 </html>
