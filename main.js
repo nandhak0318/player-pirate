@@ -50,6 +50,8 @@ if(!('AudioContext' in window || 'webkitAudioContext' in window)){
   document.getElementById('slider').disabled = true
 }
 
+if (!SharedArrayBuffer) document.getElementById('shared').classList.remove('hide')
+
 // initationg
 let source_config = {
   type: 'video',
@@ -117,7 +119,7 @@ const load = async(files)=>{
   
 
   // check ffmpeg processing
-  if(files.size<maxAllowedSize){
+  if (files.size < maxAllowedSize && SharedArrayBuffer){
     await ffmpeg.load({
       coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
       wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
@@ -151,7 +153,7 @@ const load = async(files)=>{
       ]
     }
   }else{
-    document.getElementById('large-file').classList.remove('hide')
+    if(SharedArrayBuffer) document.getElementById('large-file').classList.remove('hide')
   }
  
   player.source = source_config
